@@ -1,0 +1,315 @@
+
+
+--------------   TechSIth   -----------------
+
+// Redux Intro
+- Its independant state management library
+- more manageable , testable , debug easy
+- We need it to manage data flow easily. Sharing data within App is very easy/ Global access
+- Global store is object that have all data of your apps. e.g age want to access in multiple components.
+- Basic flow is.
+     Dispatch Action with Payload > Reducer handle action and update State > UI re render
+- Example is ATM machine. when you withdraw money. it will update to global store. so that updated balance will be shown everywhere
+- Dispatch is action. payload is data with action. Reducer is pure function that handle action and update state. Re render UI.
+
+// independant Redux Library with Plain JS
+
+- create folder and run npm init and yes yes
+package.json will be added under folder. use npm i redux --save to install redux
+- Create basic js file. reduxtest.js
+- import create Store. create Store , pass a reducer, dispatch action ADD , update age + 1
+- create newState using ... and run node file.js to see getState of current state of object
+- add other actions subtract and handlers in reducer.
+- Subscribe to store using store.subscribe() to get update on each state change
+- pass a action payload value and add in it
+
+// React with Redux
+- Create new react project using npx create-react-app my-app script
+- Understand purpose of statemanagement , first use react local component state. then move to redux solution
+- in App component , add Age text and add 2 buttons. Age up and Age down and add their handlers to incr / decr the age
+- Now use the redux way.. Install 2 packages redux and react-redux
+- We need store , reducer and actions. create store folder and create reducer.js file
+- In react store should be created in Index.js
+- create STore there using createStore and pass your reducer in it.
+- import provider pass store in its property and wrap around app component.
+- Change you app component code to use actions to update state.
+- In component you need 2 things
+   1- dispatch actions
+   2- update UI of component on state change
+- We need to map actions/dispatch to props + map state to props to access in componenent. by creating both objects and connect them to component using connect method.
+- pass both mapstatetodispatcha and props to connect. and it will return higher order component. then pass app component in it. this way they will connect. syntax is 
+connect(mapStatetoProps, mapDispatchToProps)(App) :p :o
+- Higher order component is just like functions. it receives component as arguments. do something with it. like make props available for inner componenet and return another component.
+- Replace state and click handlers with props properties ;) Hurrayyy.
+
+
+// Update state Immutable way
+- Handling Complex State immutable way. using concat or filter methods. or we can use JS libraries like immutable JS.
+- other than age, we want to maintain history array. and then click on each item will add it in history array. and then click on each item will remove it from history.
+We need additional history array in store.
+need new action DEL item and then ahve entry in reducer. also add in mapstatetoprops and mapdispatchtoProp. Huraay done.\ :)))
+
+// Redux Combining Multiple Reducers
+- Redux Allow only one reducers. but if you work on large scale project. and multiple resources working on multiple set of store and separate reducer.
+- We need separate reducers and later on we combine them in single reducer.
+- create new react project. create updateA, updateB button and add other variables value on click. so we need A value in B click. and B value in A click.
+- For that create 2 reducers in same or separate files. import them in index.js. use combineReducer method and pass both reducers as key value to create rootReducer. and create store from it.
+- Now b will not accessed in A reducer, and vice versa. so we need to pass them as payload.
+- DONE..
+
+
+// Redux Middleware
+- Problem is When you dispatch action and receive in reducer. What if you want to do any async operation ? lets say you wanna save age to server first and then control should go to reducer. after server update you want to update state only.
+- By default Redux support synch operations.
+- Redux middleware provides a third-party extension point between dispatching an action, and the moment it reaches the reducer. People use Redux middleware for logging, crash reporting, talking to an asynchronous API, routing, and more
+- Use React redux project again.
+- Redux Saga and Thunk are examples
+- STeps to add middleware , import applyMiddleware from redux. in creating store and pass middleware method.
+- create middleware method lets say, Log Action. Syntax for creating middleware is function that receive store object, inside it you return another function with 'next' argument. and inside it you return another action having current 'action' in it. when you do next(action) only then call will go to reducer only.
+- syntax is in index.js file. in inner function return next(action);
+- We can add multiple middleware function in sequence. They will execute from right to left. like 
+const store = createStore(reducer, applyMiddleware(logAction2,logAction));
+
+// Redux Thunk
+- Its a separate independant middleware available. also redux saga.
+Thunk means if you gonna execute something or statement. instead of just executing right there. wrap it around function and u call that wrapped function to call that statement. 
+- Instead of dispatching actions right away , wrap it around function thunk to execute later.
+- same example age up for thunk example.
+- First create folder and file for action creators. also for reducer.
+- copy all actions there and export them and use that object in dispatch in App file now.
+- install redux thunk now. npm i --save redux-thunk
+- applymiddleware as thunk with reducer in create store like this
+const store = createStore(reducer, applyMiddleware(thunk));
+- Now our action creators where our data is being sent to dispatch can be synchronous or async. so lets do implement 2 variants. sync and async for ageup or down;
+- in sync ageup, return a function that have argument. mock async operation using setTimeout and dispatch the action now.
+- Use loading for 5 seconds to update. add LOADING action. dispatch it in ageup before setTomeout Async. Basically Action have power when to dispatch , whether to wait for an API call or not.
+we can do logging, api call using middlewares etc..
+- we can apply thunk middleware and our custo middlewares too.
+
+
+------------- Code evolution Youtube -----------
+
+// Intro
+- Redux is for js, angular, react or value
+- Redux is predictable because easily keep track of state change
+- react have own state then why redux. we have hundreds of components and need to pass data if cross components wants to send or share data b/w them. this needs to be done using action handler and props drilling.
+- React contexts also helps us prevent props drilling
+- react-redux package is react supported library
+
+// Core concepts
+- example of cake shop. Shop is state container. buying a cake. removing cake. update payment are actions. Reducers is shopkeeper who tie store and actions together
+
+// core principles
+store - holds state of app
+actions - describe action of changing state
+reducer - actually change state based on action
+action creators - functions that return action object with payload that need to pass in dispatch.
+1- State of whole app should be stored in single global store object.
+2- Only way to update state is dispatching action with payload
+3- Reducers should be pure. and handle state changes against actions
+4- UI is updated after state change
+
+// Example
+implement action, reducer , store for cake shop app
+Store Allow access to state via getState()
+subscribe to Store for any update in store.
+store.dispatch 
+store subscription of store and unsubscribe it.
+
+// Cakes and Icecreams (multiple reducers)
+- cake sell by shopkeeper 1 , icecream sell by shopkeper2
+- state is icecreams + cake now.
+- create 2 separate reducers , combine them and pass in createStore.
+- multiple reducer is to scale your app. maintain sub part of state separately.
+- When we dispatch action, all reducers receive it. state updated by reducer that handles the case.
+
+// Middleware
+- suggested way to extend redux, hoook b/w action dispatch and before reaching to reducer.
+- use for logging, async operations
+- Implement reduxLogger library. that have a middleware. applyMiddleware while creating a store.
+- you can have multiple middleware. 
+
+// Async actions using middleware
+- for example like to do an API call.
+- fetch list of users from API and store in redux store.
+- store is like {loading: true, users: [], error: ''}
+- 3 actions 
+FETCH_USER_REQUEST > loading: true
+FETCH_USER_SUCCESS > loading: false and users: data
+FETCH_USER_FAILURE ? loading: false, error: error API
+
+// Using Redux Thunk Middleware.
+- Install axios / fetch for API call
+- use Redux thunk as middleware for async actions
+- Create a store using reducer and redux thunk apply middleware.
+- thunk make ABility for action creator to return function instead of action object. this return function not need to be pure.
+-  action creator is one that return action objects.
+- do API call using JSOn placeholder and use axios to get data. 
+- dispatch actions success and fail respecyively. its working..
+
+// React Redux Cake Shop Application
+- npx create-react-app and create app for Shop app
+- install redux and react-redux
+- create component folder, redux folder, inside it cake folder, and create action types and action file.
+- create an action and create reducer to handle action
+- create a store now using reducer export it. use in app.js or index.js and provider it around it.
+- SUbscribe store and dispatch action in cake container component.
+- Use connect b/w mapState to props and dispatch. We can also write Selectors to get data from state to provide in props.
+
+// React Redux with Hooks
+- Side effects are code that affect something outside of scope of currently executed function like APi call.
+- Hooks helps you with multiple situaions. back ward compatible. available after React v7.1
+- Hooks help you subscribe store and dispatch actions with using connect.
+
+// Use Selector hook
+- useSelector hook provided by react-redux. allow you to access state inside component. without using mapstate to props.
+- access it. use it directly in JSX like 
+totalCakes = useSelector(state=>state.numOfCakes) :p :D
+- use this new component inside app and test it. Thats it.
+
+// Use Dispatch Hook
+- Just import useDispatch() and save in variable. and dispatch actions you want directly.
+- const dispatch = useDispatch(); :)
+- some affacts or warnings of using both hooks. read from documentation.
+
+// Multiple Combine Reducers
+- Create Incecream folder. and create incream state, reducer, actions and action types. and Icecream container
+- create new rootreducer. combine that and use in createStore now.
+- update state with icecream dot and cake dot in combineReducer method because of combineReducer({
+   cake: ....
+   icecream: ....
+})
+
+// Logger Middleware in react - Redux
+- 3rd party middleware. npm i -g redux-Logger
+- import logger and use in apply middleware.
+- you will have logger in console for every action of store.
+- it will show you timestamp, action details, prev state, and current state
+
+// Redux dev tool extension
+- install extension. add to chrome
+- npm install redux-devtool-extension
+- use composeWithDevTool method and wrap around applyMiddleware like
+composeWithDevTool(applyMiddleware())
+- open redux tab , see state, actions, history there.. :)
+
+// payload in action
+- create new component have input text. contain no of cake to buy. pass it in payload action. and decrease no of cake by n.
+- useState to manage local state for no of cakes to buy
+
+// Map state to props/dispatch , own props 2nd argument
+- in mapStatetoProps , and mapDispatchToProps contains state as first param, dispatch as first param. but 2nd is components own props. that helps decide something to assign in state or props.
+- lets create component, in which we show Item count. if cake props is passed. show cake count. if cake props is not passed. show icecream count.
+- and decide based on cake props in mapToState method. Simple..
+- similarly for dispatch. if cake present in ownprops. dispatch buyCake otherwise buy icecream. 
+- In some case if you dont want map mapStatetoProps. pass null in connect as 1st argument. connect(null, mapDispatchToProps)
+
+// ASynchronous actions
+- We can have sync or async action. sync actions quickly update state. but async actions need wait lets say for an API call.
+- Example is same. fetch user , successfetch and errorfetch. state is loading, users and error.
+- create user folder for action creators, types, and reducer. also user container component.
+- add userReducer in combine reducer store
+
+// API request in user component using middleware thunk
+- install axios and redux thunk
+- connect state and dispatch
+- use thunk in apply middleware and pass in create store.
+- create new action that return function contain dispatch. and call axios and then dispatch fetch, fetch success and fail accordningly.
+
+
+// ---------------- React Code Evolution ----------------- //
+
+// React Basics
+
+- Open source JS UI Library, Not a framework. created for UI 
+- Rich ecosystem and many libraries like for forms, router, state management
+- created and maintained by Facebook, 150K+ stars on Github. Top on Stackoverflow.
+- Component based architecture. e.g for a page header, body, nav and footer. 
+- Create article component for react, angular or vue. web components.
+- React is declarative , one liner do many things for us. 
+- ask artist to draw portrait of beautiful scenery VS ask child to draw(you need to tell in detail)
+- DOM update handles greatly. integrate react into any of your app.
+- react native for mobile option availble.
+- pre req are html, css, es6, js. must know this, filter,map,reduce, let, const, arrow function, default param, object literal, rest, spread, destruturting
+- path is fundamental -> http -> routing -> redux -> utlities
+- v16.5.2
+-   
+
+
+
+
+
+// ********************************* TESTING ****************************** //
+
+
+// Testing Tools React / Javascript
+JEST - javascript and React supported testing library
+Enzyme - React supported testing utility,  Instead of serving as a full testing library, Enzyme is a library that makes testing React components specifically easier
+Cypress - E2E Javascript Framework Built on top of Mocha.
+React Test Renderer - Package provides used to render react component into plain JS object with having DOm or browser dependancy. 
+React Testing Library - Comes with Create React app. Library to Test react components. unit + integration testing
+Selenium - Framework that supports most kind of testing(unit+integration) in multiple languages. we use it for e2e testing 
+
+Agoda use Combination of JEST, Enzyme and React-test-renderer
+
+
+// Unit testing
+Asserting Test / Writing test / Running test / Simulate React App & component
+npm test , or yarn test - look for all .test.tsx file in your code and run them all.
+"JEST Runner" - VS code extension to Run individual or multiple tests and debug them by clicks only.
+Best practice is to create .tsx file as close as possible with .tsx file of component.
+3A's in Unit Testing 
+   - Arrange (Setup data/environment) 
+   - Act (action or run logic to test like button click or execute function) 
+   - Assert (Compare execution result with expected , boolean expression mostly to specifti test is pass or fail)
+Example of writing test with 3A's - check text in a component 
+   - Arrange -> import and Render component using enzyme or react testing library.
+   - Act -> Nothing for this example
+   - Assert -> expect (screen.getByTExt('Hello World', {exact: false}).toBeInDocument)
+
+
+Stub - Dummy code , top down integration, allow test upper level of code when lower level not availble.
+Driver - Dummy Code, bottom up integration, allow test bottom level of code when uppoer level not developed yet.
+Assertion - Statement that expect to be true or false
+Matchher - Used in Assertion like toBE, toBeEqual, TobeInDocument etc..
+test() - describe the test with ananymous function in which test written.
+Expect - 
+Test - define by test() or it(). part of test suite
+Test Suites - Group the related tests into a suite. in output shows as group or heirarchy.
+Describe - globally available , to create test suites. can be nested describes for subgroups. 
+Snapshots -
+Code coverage - is a measurement of the amount of code that is run by unit tests - either lines, branches, or methods 
+Mock - when you want to remove external dependencies and use your own part of data. also mock help you test other things than output only , 
+.. like how many times function called, which aprameter receive in which call, this value, 
+use jest.fn() to create mock function, jest.spyon() for object, jest.mock for whole module.
+
+
+// Test Button Click and State.
+- click of button , change a state and conditionally render a <p></p>.
+- you test 2 things. 1- whether button click method correctly change state. and render right paragrpah.
+- Write 2 new test in same test suites.
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
